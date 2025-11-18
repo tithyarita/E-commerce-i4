@@ -1,15 +1,16 @@
-   <template>
+<template>
   <div class="promotion" :style="{ backgroundColor: backgroundColor }">
     <div class="promotion-text">
       <h2>{{ title }}</h2>
-      <ButtonCom :label="buttonLabel" :color="buttonColor" />
+      <ButtonCom :label="buttonLabel" :color="buttonColor" @click="shopNow" />
     </div>
     <img :src="image" :alt="title" class="promotion-image" />
   </div>
 </template>
 
+
 <script lang="ts">
-import ButtonCom from './ButtonCom.vue'
+import ButtonCom from './buttonCom.vue'
 
 export default {
   name: 'PromotionCom',
@@ -22,6 +23,11 @@ export default {
     backgroundColor: {
       type: String,
       default: '#f0e8d5',
+    },
+  },
+  methods: {
+    shopNow() {
+      alert('Shop Now '+ this.title);
     },
   },
 }
