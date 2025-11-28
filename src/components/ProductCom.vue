@@ -9,9 +9,9 @@
     <img :src="image" :alt="product.name" class="product-img" />
 
     <div class="info">
-      <!-- PRODUCT TITLE & NAME -->
-      <h3 class="title">{{ product.title }}</h3>
-      <h2 class="name">{{ product.name }}</h2>
+      <!-- PRODUCT NAME & DETAIL -->
+      <p class="name">{{ product.name }}</p>
+      <h2 class="detail">{{ product.detail }}</h2>
 
       <!-- RATING -->
       <div class="rating">
@@ -54,7 +54,6 @@ const API_BASE = 'http://localhost:3000'
 // IMAGE: parse JSON array or fallback
 const image = computed(() => {
   if (!props.product.image) return 'https://via.placeholder.com/220x220?text=No+Image'
-
   try {
     const arr = JSON.parse(props.product.image)
     if (arr.length > 0) {
@@ -64,7 +63,6 @@ const image = computed(() => {
         : `${API_BASE}/${first.replace(/\\/g, '/').replace(/ /g, '%20')}`
     }
   } catch {
-    // fallback if not JSON
     return props.product.image.startsWith('http')
       ? props.product.image
       : `${API_BASE}/${props.product.image.replace(/\\/g, '/').replace(/ /g, '%20')}`
@@ -131,10 +129,16 @@ const decrease = () => { if (qty.value > 0) qty.value-- }
   font-weight: 600;
   margin-bottom: 3px;
 }
-.name {
-  font-size: 13px;
-  color: #374151;
-  margin-bottom: 5px;
+
+.detail {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 6px;
+}
+.name{
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 4px;
 }
 
 .rating {
@@ -147,7 +151,7 @@ const decrease = () => { if (qty.value > 0) qty.value-- }
 .empty { color: #d1d5db; }
 .rating-number { margin-left: 6px; font-size: 13px; color: #6b7280; }
 
-.size { font-size: 13px; color: #6b7280; }
+.size { font-size: 13px; color: #6b7280; margin-bottom: 8px; }
 
 .price-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
 .new-price { font-size: 16px; font-weight: bold; color: #10b981; }

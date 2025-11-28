@@ -25,8 +25,8 @@ export interface Promotion {
 
 export interface Product {
   id?: number
-  title: string
   name: string
+  detail: string
   rating: number
   size: string
   image: string
@@ -103,29 +103,29 @@ export const useProductStore = defineStore('product', {
       }
     },
 
-  async fetchProducts() {
+async fetchProducts() {
   try {
     const res = await fetch('http://localhost:3000/api/products')
     const data: any[] = await res.json()
 
-    // Add default title and discountcolor if missing
-  this.products = data.map(p => ({
-  ...p,
-  title: p.title ?? '', // empty string if missing
-  name: p.name,
-  discountcolor: p.discountcolor || '#10b981',
-  rating: Number(p.rating),
-  price: Number(p.price),
-  countSold: Number(p.countSold),
-  categoryId: Number(p.categoryId),
-  groupId: p.groupId ? Number(p.groupId) : 0
-}))
-
-
+    // Map API data to your store
+    this.products = data.map(p => ({
+      ...p,
+      name: p.name,
+      detail: p.detail || 'No description available',  // fixed typo
+      discountcolor: p.discountcolor || '#10b981',
+      rating: Number(p.rating),
+      price: Number(p.price),
+      countSold: Number(p.countSold),
+      categoryId: Number(p.categoryId),
+      groupId: p.groupId ? Number(p.groupId) : 0,
+      inStock: p.inStock !== undefined ? p.inStock : true
+    }))
   } catch (err) {
     console.error('Failed to fetch products', err)
   }
 }
+
 
 ,
  async deleteProduct(id: number) {
