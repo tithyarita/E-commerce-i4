@@ -1,23 +1,23 @@
 <template>
   <div id="app">
+    <!-- Categories -->
     <h2>Categories</h2>
-
     <div class="category-list">
       <CategoryCom
-        v-for="(cat, index) in categories"
-        :key="index"
+        v-for="cat in productStore.categories"
+        :key="cat.id ?? cat.name"
         :image="getImageUrl(cat.image)"
         :title="cat.name"
         :items="cat.productCount"
       />
     </div>
 
+    <!-- Promotions -->
     <h2>Promotions</h2>
-
     <div class="Promo-list">
       <PromotionCom
-        v-for="(promo, index) in promotions"
-        :key="index"
+        v-for="promo in productStore.promotions"
+        :key="promo.id ?? promo.title"
         :title="promo.title"
         :image="getImageUrl(promo.image)"
         :buttonLabel="promo.buttonText"
@@ -25,108 +25,78 @@
         :backgroundColor="promo.color"
       />
     </div>
+
+    <!-- Category Menu -->
+    <CategoryMenu
+      v-model="selectedCategory"
+      :categories="productStore.categoryNames"
+    />
+
+    <!-- Products -->
+    <h2>Popular Products</h2>
+    <div class="product-list">
+      <ProductCom
+        v-for="prod in filteredProducts"
+        :key="prod.id ?? prod.name"
+        :product="prod"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useProductStore } from './stores/productStore'
+import type { Product } from './stores/productStore'
+
 import CategoryCom from './components/CategoryCom.vue'
 import PromotionCom from './components/PromotionCom.vue'
-import axios from 'axios'
-
-// Types
-interface Category {
-  id?: number
-  name: string
-  productCount: number
-  color: string
-  image: string
-}
-
-interface Promotion {
-  id?: number
-  title: string
-  color: string
-  image: string
-  buttonText: string
-  buttonColor: string
-}
+import ProductCom from './components/ProductCom.vue'
+import CategoryMenu from './components/CategoryMenu.vue'
 
 export default {
   name: 'App',
-  components: { CategoryCom, PromotionCom },
-
+  components: {
+    CategoryCom,
+    PromotionCom,
+    ProductCom,
+    CategoryMenu,
+  },
   setup() {
-    const categories = ref<Category[]>([])
-    const promotions = ref<Promotion[]>([])
-
+    const productStore = useProductStore()
+    const selectedCategory = ref('All')
     const API_BASE = 'http://localhost:3000'
 
-    // Helper function to fix image paths
     const getImageUrl = (imagePath: string | undefined) => {
-      if (!imagePath) return 'https://via.placeholder.com/150'
-      // Replace backslashes with forward slashes and encode spaces
-      const path = imagePath.replace(/\\/g, '/')
-      return `${API_BASE}/${path.replace(/ /g, '%20')}`
+      if (!imagePath) return 'https://via.placeholder.com/220x220?text=No+Image'
+      if (imagePath.startsWith('http') || imagePath.startsWith('//'))
+        return imagePath
+      return `${API_BASE}/${imagePath.replace(/\\/g, '/').replace(/ /g, '%20')}`
     }
 
-    // Fetch categories from API
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get<Category[]>(`${API_BASE}/api/categories`)
-        if (response.data && response.data.length) {
-          categories.value = response.data
-        } else {
-          console.warn('Categories API returned empty data.')
-        }
-      } catch (error) {
-        console.error('Failed to fetch categories:', error)
-        // fallback hardcoded categories
-        categories.value = [
-          { name: 'Cake & Milk', productCount: 14, color: '#F2FCE4', image: 'uploads/category/1763009937403-950561442-cat-13 1.png' },
-          { name: 'Peach', productCount: 17, color: '#F3E8E8', image: 'uploads/category/cat-14.png' },
-          { name: 'Organic Kiwi', productCount: 21, color: '#E7EAF3', image: 'uploads/category/cat-12.png' },
-        ]
-      }
-    }
+    const filteredProducts = computed<Product[]>(() => {
+      if (selectedCategory.value === 'All') return productStore.products
 
-    // Fetch promotions from API
-    const fetchPromotions = async () => {
-      try {
-        const response = await axios.get<Promotion[]>(`${API_BASE}/api/promotions`)
-        if (response.data && response.data.length) {
-          promotions.value = response.data
-        } else {
-          console.warn('Promotions API returned empty data.')
-        }
-      } catch (error) {
-        console.error('Failed to fetch promotions:', error)
-        // fallback hardcoded promotions
-        promotions.value = [
-          {
-            title: 'Everyday Fresh & Clean with Our Products',
-            image: 'uploads/promotion/Cms-04.png',
-            buttonText: 'Shop Now ➜',
-            buttonColor: '#2ecc71',
-            color: '#F0E8D5',
-          },
-          {
-            title: 'Make your Breakfast Healthy and Easy',
-            image: 'uploads/promotion/Cat-01.png',
-            buttonText: 'Shop Now ➜',
-            buttonColor: '#3498db',
-            color: '#F3E8E8',
-          },
-        ]
-      }
-    }
+      const category = productStore.categories.find(
+        (c) => c.name === selectedCategory.value
+      )
+      if (!category) return []
 
-    onMounted(() => {
-      fetchCategories()
-      fetchPromotions()
+      return productStore.products.filter(
+        (p) => p.categoryId === category.id
+      )
     })
 
-    return { categories, promotions, getImageUrl }
+    onMounted(async () => {
+      await productStore.fetchAll()
+    })
+
+    return {
+      productStore,
+      selectedCategory,
+      filteredProducts,
+      getImageUrl,
+    }
   },
 }
 </script>
@@ -154,5 +124,13 @@ h2 {
   display: flex;
   gap: 15px;
   margin-top: 40px;
+  overflow-x: auto;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
 }
 </style>
