@@ -116,6 +116,7 @@ async fetchProducts() {
       discountcolor: p.discountcolor || '#10b981',
       rating: Number(p.rating),
       price: Number(p.price),
+      old: Number(p.old),
       countSold: Number(p.countSold),
       categoryId: Number(p.categoryId),
       groupId: p.groupId ? Number(p.groupId) : 0,

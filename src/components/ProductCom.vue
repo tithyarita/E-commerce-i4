@@ -1,47 +1,50 @@
 <template>
-  <div class="product-card">
-    <!-- DISCOUNT BADGE -->
-    <div v-if="badgeText" class="badge" :style="{ backgroundColor: product.discountcolor }">
-      {{ badgeText }}
-    </div>
-
-    <!-- PRODUCT IMAGE -->
-    <img :src="image" :alt="product.name" class="product-img" />
-
-    <div class="info">
-      <!-- PRODUCT NAME & DETAIL -->
-      <p class="name">{{ product.name }}</p>
-      <h2 class="detail">{{ product.detail }}</h2>
-
-      <!-- RATING -->
-      <div class="rating">
-        <i
-          v-for="n in 5"
-          :key="n"
-          :class="n <= product.rating ? 'fas fa-star filled' : 'far fa-star empty'"
-        ></i>
-        <span class="rating-number">{{ product.rating }}</span>
+  <!-- Wrap entire card in router-link -->
+  <router-link :to="`/products/${product.id}`" class="product-card-link">
+    <div class="product-card">
+      <!-- DISCOUNT BADGE -->
+      <div v-if="badgeText" class="badge" :style="{ backgroundColor: product.discountcolor }">
+        {{ badgeText }}
       </div>
 
-      <!-- SIZE -->
-      <p class="size">Size: {{ product.size }}</p>
+      <!-- PRODUCT IMAGE -->
+      <img :src="image" :alt="product.name" class="product-img" />
 
-      <!-- PRICES & QUANTITY -->
-      <div class="price-row">
-        <span class="new-price">${{ product.price.toFixed(2) }}</span>
-        <span v-if="oldPrice" class="old-price">${{ oldPrice }}</span>
+      <div class="info">
+        <!-- PRODUCT NAME & DETAIL -->
+        <p class="name">{{ product.name }}</p>
+        <h2 class="detail">{{ product.detail }}</h2>
 
-        <button v-if="qty === 0" class="btn-add" @click="increase">Add +</button>
-        <div v-else class="qty-inline">
-          <span class="qty-icon" @click="decrease">▾</span>
-          <span class="qty-value">{{ qty }}</span>
-          <span class="qty-icon" @click="increase">▴</span>
+        <!-- RATING -->
+        <div class="rating">
+          <i
+            v-for="n in 5"
+            :key="n"
+            :class="n <= product.rating ? 'fas fa-star filled' : 'far fa-star empty'"
+          ></i>
+          <span class="rating-number">{{ product.rating }}</span>
         </div>
-      </div>
 
-      <p v-if="!product.inStock" class="out-of-stock">Out of stock</p>
+        <!-- SIZE -->
+        <p class="size">Size: {{ product.size }}</p>
+
+        <!-- PRICES & QUANTITY -->
+        <div class="price-row">
+          <span class="new-price">${{ product.price.toFixed(2) }}</span>
+          <span v-if="oldPrice" class="old-price">${{ oldPrice }}</span>
+
+          <button v-if="qty === 0" class="btn-add" @click.stop="increase">Add +</button>
+          <div v-else class="qty-inline">
+            <span class="qty-icon" @click.stop="decrease">▾</span>
+            <span class="qty-value">{{ qty }}</span>
+            <span class="qty-icon" @click.stop="increase">▴</span>
+          </div>
+        </div>
+
+        <p v-if="!product.inStock" class="out-of-stock">Out of stock</p>
+      </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script setup lang="ts">
@@ -92,6 +95,13 @@ const decrease = () => { if (qty.value > 0) qty.value-- }
 </script>
 
 <style scoped>
+/* Make router-link behave like a block element */
+.product-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 .product-card {
   width: 220px;
   padding: 12px;
@@ -122,12 +132,6 @@ const decrease = () => { if (qty.value > 0) qty.value-- }
   height: 160px;
   object-fit: cover;
   margin-bottom: 10px;
-}
-
-.title {
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: 3px;
 }
 
 .detail {
