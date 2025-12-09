@@ -35,8 +35,8 @@ router-link {
   text-decoration: none;
 }
 .category-item {
-  width: 136px;
-  height: 177px;
+  width: 120px;
+  height: 160px;
   text-align: center;
   padding: 3px;
   background: #f2fce4;

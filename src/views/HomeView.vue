@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <div class="banner-container">
+      <img src="../../img/Hero.png" alt="">
+    </div>
     <!-- Categories -->
     <h2>Categories</h2>
     <div class="category-list">
@@ -29,10 +32,13 @@
     </div>
 
     <!-- Category Menu -->
+     <div class="categorymenu">
     <CategoryMenu
       v-model="selectedCategory"
       :categories="productStore.categoryNames"
+
     />
+    </div>
 
     <!-- Products -->
     <h2>Popular Products</h2>
@@ -55,6 +61,7 @@ import CategoryCom from '../components/CategoryCom.vue'
 import PromotionCom from '../components/PromotionCom.vue'
 import ProductCom from '../components/ProductCom.vue'
 import CategoryMenu from '../components/CategoryMenu.vue'
+import banner from '../components/banner.vue'
 
 export default {
   name: 'App',
@@ -114,10 +121,15 @@ h2 {
   margin-bottom: 10px;
   color: #333;
 }
+.categorymenu{
+  display: flex;
+  justify-content: center;
+
+}
 
 .category-list {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   margin-bottom: 40px;
   flex-wrap: wrap;
 }
@@ -132,7 +144,10 @@ h2 {
 .product-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 25px;
+  gap: 18px;
   margin-top: 20px;
+}
+.banner-container img{
+  width: 100%;
 }
 </style>
