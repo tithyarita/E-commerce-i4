@@ -113,7 +113,7 @@ export default {
 <style>
 #app {
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Quicksand', sans-serif;
   margin-bottom: 10px;
 }
 

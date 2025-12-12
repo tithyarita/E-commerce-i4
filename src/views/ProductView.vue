@@ -170,7 +170,7 @@ const addToCart = () => {
 <style scoped>
 /* NOTE: Using the same styles as the previous iteration for consistency */
 
-.product-detail-view { max-width: 1200px; margin: 0 auto; padding: 20px; }
+.product-detail-view { max-width: 1200px; margin: 0 auto; padding: 20px; font-family: 'Quicksand', sans-serif;  }
 .main-content-area { display: flex; gap: 40px; margin-top: 20px; }
 
 /* --- Image Gallery Styles --- */
@@ -222,8 +222,8 @@ const addToCart = () => {
 .meta-value { font-weight: 600; color: #1f2937; }
 
 /* Tabs Section */
-.tabs-section { margin-top: 40px; border-top: 1px solid #e5e7eb; }
-.tab-header { display: flex; gap: 15px; margin-top: 20px; margin-bottom: 15px; }
+.tabs-section { margin-top: 40px; border-top: 1px solid #e5e7eb; font-family: 'Quicksand', sans-serif; }
+.tab-header { display: flex; gap: 15px; margin-top: 20px; margin-bottom: 15px; font-family: 'Quicksand', sans-serif; }
 .tab-button { background: transparent; border: none; padding: 10px 0; font-size: 16px; font-weight: 600; color: #6b7280; cursor: pointer; border-bottom: 3px solid transparent; transition: color 0.2s, border-color 0.2s; }
 .tab-button.active { color: #10b981; border-bottom-color: #10b981; }
 .tab-content { padding: 15px 0; font-size: 15px; color: #4b5563; }
